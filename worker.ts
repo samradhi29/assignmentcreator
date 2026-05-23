@@ -1,16 +1,42 @@
 import "dotenv/config";
 
+import express from "express";
 import { Worker } from "bullmq";
-
 import IORedis from "ioredis";
-
 import { generatePaper } from "./services/paper-genration";
-
 import { io as client } from "socket.io-client";
 
-const socket = client("http://localhost:5000", {
+// ---------------- EXPRESS ----------------
+
+const app = express();
+
+const PORT: number = process.env.PORT
+  ? parseInt(process.env.PORT, 10)
+  : 3000;
+
+app.get("/", (_, res) => {
+  res.send("Worker Running");
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Worker server running on port ${PORT}`);
+});
+
+// ---------------- SOCKET ----------------
+
+const socket = client(process.env.SOCKET_URL!, {
   transports: ["websocket"],
 });
+
+socket.on("connect", () => {
+  console.log("Connected to Socket Server");
+});
+
+socket.on("disconnect", () => {
+  console.log("Socket Disconnected");
+});
+
+// ---------------- REDIS ----------------
 
 export const connection = new IORedis(
   process.env.REDIS_URL!,
@@ -20,14 +46,7 @@ export const connection = new IORedis(
   }
 );
 
-
-socket.on("connect", () => {
-  console.log("Connected to Socket Server");
-});
-
-socket.on("disconnect", () => {
-  console.log("Socket Disconnected");
-});
+// ---------------- WORKER ----------------
 
 const worker = new Worker(
   "assignmentQueue",
@@ -42,7 +61,6 @@ const worker = new Worker(
       assignmentId
     );
 
-  
     socket.emit("assignment-update", {
       assignmentId,
       status: "extracting",
@@ -55,7 +73,6 @@ const worker = new Worker(
       setTimeout(resolve, 1000)
     );
 
-    
     socket.emit("assignment-update", {
       assignmentId,
       status: "generating",
@@ -68,12 +85,10 @@ const worker = new Worker(
       setTimeout(resolve, 1000)
     );
 
-   
     await generatePaper(
       assignmentId
     );
 
-    
     socket.emit("assignment-update", {
       assignmentId,
       status: "formatting",
@@ -104,7 +119,7 @@ const worker = new Worker(
   }
 );
 
-
+// ---------------- EVENTS ----------------
 
 worker.on(
   "completed",
