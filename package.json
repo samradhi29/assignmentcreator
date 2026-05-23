@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build": "next build",
     "worker": "npx tsx worker.ts",
     "socket": "tsx socket-server.ts"
   },
