@@ -1,11 +1,10 @@
-import fs from "fs";
-import { extractText } from "unpdf";
+import * as pdf from "pdf-parse";
 
-export async function extractPdfText(filePath: string) {
-  const buffer = fs.readFileSync(filePath);
-  const uint8Array = new Uint8Array(buffer);
+export async function extractPdfText(
+  buffer: Buffer
+) {
+  const data =
+    await pdf.default(buffer);
 
-  const { text } = await extractText(uint8Array, { mergePages: true });
-
-  return text;
+  return data.text;
 }
