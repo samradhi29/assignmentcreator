@@ -8,7 +8,7 @@ import { generatePaper } from "./services/paper-genration";
 
 import { io as client } from "socket.io-client";
 
-const socket = client("http://localhost:4000", {
+const socket = client("http://localhost:5000", {
   transports: ["websocket"],
 });
 
