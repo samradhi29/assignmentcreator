@@ -20,7 +20,7 @@ export const connection = new IORedis(
   }
 );
 
-// ✅ SOCKET CONNECT LOG
+
 socket.on("connect", () => {
   console.log("Connected to Socket Server");
 });
@@ -42,9 +42,7 @@ const worker = new Worker(
       assignmentId
     );
 
-    // =========================
-    // STEP 1
-    // =========================
+  
     socket.emit("assignment-update", {
       assignmentId,
       status: "extracting",
@@ -57,9 +55,7 @@ const worker = new Worker(
       setTimeout(resolve, 1000)
     );
 
-    // =========================
-    // STEP 2
-    // =========================
+    
     socket.emit("assignment-update", {
       assignmentId,
       status: "generating",
@@ -72,16 +68,12 @@ const worker = new Worker(
       setTimeout(resolve, 1000)
     );
 
-    // =========================
-    // MAIN AI GENERATION
-    // =========================
+   
     await generatePaper(
       assignmentId
     );
 
-    // =========================
-    // STEP 3
-    // =========================
+    
     socket.emit("assignment-update", {
       assignmentId,
       status: "formatting",
@@ -95,9 +87,6 @@ const worker = new Worker(
       setTimeout(resolve, 1000)
     );
 
-    // =========================
-    // COMPLETED
-    // =========================
     socket.emit("assignment-update", {
       assignmentId,
       status: "completed",
@@ -115,9 +104,7 @@ const worker = new Worker(
   }
 );
 
-// =========================
-// WORKER EVENTS
-// =========================
+
 
 worker.on(
   "completed",
