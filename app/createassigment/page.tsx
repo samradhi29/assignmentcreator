@@ -111,38 +111,75 @@ export default function CreateAssignment() {
     ]);
   }
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
+ const handleSubmit = async () => {
+  try {
+    setLoading(true);
 
-      const formData = new FormData();
+    let uploadedFileUrl = "";
 
-      if (selectedFile) {
-        formData.append("file", selectedFile);
-      }
+    // ---------------- UPLOAD TO CLOUDINARY ----------------
 
-      formData.append("dueDate", dueDate);
-      formData.append("additional", additional);
-      formData.append("rows", JSON.stringify(rows));
+    if (selectedFile) {
+      const cloudinaryFormData = new FormData();
 
-      const response = await fetch("/api/assigment/create", {
-        method: "POST",
-        body: formData,
-      });
+      cloudinaryFormData.append("file", selectedFile);
 
-      if (!response.ok) return;
+      cloudinaryFormData.append(
+        "upload_preset",
+        process.env
+          .NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+      );
 
-      const data = await response.json();
+      const uploadRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${
+          process.env
+            .NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        }/raw/upload`,
+        {
+          method: "POST",
+          body: cloudinaryFormData,
+        }
+      );
 
-      if (!data.assignmentId) return;
+      const uploadData =
+        await uploadRes.json();
 
-      router.push(`/assignment/${data.assignmentId}`);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+      uploadedFileUrl =
+        uploadData.secure_url;
     }
-  };
+
+    // ---------------- SEND DATA TO API ----------------
+
+    const response = await fetch(
+      "/api/assigment/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          dueDate,
+          additional,
+          rows,
+          fileUrl: uploadedFileUrl,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.assignmentId) {
+      router.push(
+        `/assignment/${data.assignmentId}`
+      );
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
