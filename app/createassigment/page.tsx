@@ -183,20 +183,20 @@ export default function CreateAssignment() {
 
   return (
     <>
-      {/* TOP NAVBAR */}
+   
       <Navbar />
 
       <div className="flex min-h-screen bg-[#f0f0ec] pt-16">
-        {/* SIDEBAR (DESKTOP ONLY) */}
+      
         <div className="hidden md:block">
           <Sidebar />
         </div>
 
-        {/* MAIN CONTENT */}
+      
         <div className="flex-1 px-4 py-6 lg:px-8">
           <div className="w-full max-w-4xl mx-auto rounded-[24px] p-6 bg-white">
 
-            {/* FILE UPLOAD */}
+            
             <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-2xl bg-white py-8 px-4 cursor-pointer">
               <Upload size={28} className="text-gray-300" />
               <span className="text-sm font-medium text-gray-600">
@@ -221,7 +221,7 @@ export default function CreateAssignment() {
               />
             </label>
 
-            {/* DUE DATE */}
+        
             <div className="mt-6">
               <label className="text-sm font-medium">Due Date</label>
 
@@ -239,7 +239,7 @@ export default function CreateAssignment() {
               </div>
             </div>
 
-            {/* ROWS */}
+         
             <div className="mt-6 flex flex-col gap-4">
               {rows.map((row) => (
                 <div
@@ -291,7 +291,7 @@ export default function CreateAssignment() {
               </button>
             </div>
 
-            {/* ADDITIONAL */}
+        
             <div className="mt-6">
               <textarea
                 value={additional}
@@ -301,12 +301,12 @@ export default function CreateAssignment() {
               />
             </div>
 
-            {/* TOTAL */}
+          
             <div className="mt-4 text-right text-sm text-gray-600">
               Total Questions: {totalQuestions} | Total Marks: {totalMarks}
             </div>
 
-            {/* ACTIONS */}
+          
             <div className="flex justify-between mt-8">
               <button className="px-6 py-3 border rounded-full flex items-center gap-2">
                 <ArrowLeft size={14} />

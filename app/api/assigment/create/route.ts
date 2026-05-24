@@ -30,7 +30,7 @@ export async function POST(
       })
     );
 
-    // ---------------- SAVE TO DB ----------------
+    
 
     const assignment =
       await Assignment.create({
@@ -42,7 +42,7 @@ export async function POST(
         status: "pending",
       });
 
-    // ---------------- QUEUE ----------------
+
 
     await assignmentQueue.add(
       "generate-paper",
@@ -52,7 +52,7 @@ export async function POST(
       }
     );
 
-    // ---------------- RESPONSE ----------------
+    
 
     return NextResponse.json({
       success: true,
