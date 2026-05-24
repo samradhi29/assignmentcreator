@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Assignment Generator
 
-## Getting Started
+An AI-powered Assignment Generator built using modern full-stack technologies that allows users to create structured academic assignments dynamically using AI.
 
-First, run the development server:
+The platform supports:
+- AI-generated question papers
+- Background job processing
+- Real-time status updates
+- File uploads
+- Assignment history
+- PDF-ready structured output
+
+---
+
+# Features
+
+- Create AI-generated assignments
+- Upload supporting PDFs/files
+- Real-time assignment generation updates using WebSockets
+- Background processing using BullMQ
+- Assignment history page
+- Assignment detail view
+- Structured AI output generation
+- Cloud-based file uploads
+- Responsive UI
+
+---
+
+# Tech Stack
+
+## Frontend
+- React.js
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Zustand
+- Socket.IO Client
+
+---
+
+## Backend
+- Node.js
+- Next.js API Routes
+- TypeScript
+
+---
+
+## Database & Queue
+- MongoDB
+- Redis (Upstash)
+- BullMQ
+
+---
+
+## AI & File Services
+- Gemini API
+- Cloudinary
+
+---
+
+## Real-Time Communication
+- Socket.IO
+- WebSockets
+
+---
+
+# Architecture Overview
+
+Frontend (Next.js)
+        │
+        ▼
+API Route (/api/assignment/create)
+        │
+        ▼
+BullMQ Queue (Redis / Upstash)
+        │
+        ▼
+Worker Server (Render)
+        │
+ ┌───────────────┐
+ │ Gemini AI API │
+ └───────────────┘
+        │
+        ▼
+MongoDB Stores Result
+        │
+        ▼
+Socket.IO emits update
+        │
+        ▼
+Frontend receives real-time status
+
+---
+
+# Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+app/
+│
+├── assignments/
+│   ├── page.tsx
+│   └── [id]/page.tsx
+│
+├── createassignment/
+│   └── page.tsx
+│
+├── api/
+│   └── assignment/
+│       ├── create/route.ts
+│       └── [id]/route.ts
+│
+├── navbar/
+│   └── page.tsx
+│
+├── sidebar/
+│   └── page.tsx
+│
+lib/
+│
+├── db.ts
+├── queue.ts
+├── socket.ts
+│
+services/
+│
+└── generatePaper.ts
+│
+store/
+│
+└── assignmentStore.ts
+│
+worker.ts
